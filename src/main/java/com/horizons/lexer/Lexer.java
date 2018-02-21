@@ -76,7 +76,9 @@ public class Lexer {
 
             //letter
             if(Character.isLetter(c)){
-                if(status == "letter" || status == ""){
+                if(status == "comment"){
+                    temp.append(c);
+                } else if(status == "letter" || status == ""){
                     temp.append(c);
                     status = "letter";
                     if(this.stringToParse.charAt(i+1) == ' '){
@@ -105,12 +107,23 @@ public class Lexer {
 
             //digits
             if(Character.isDigit(c)){
-                if(status == "digit" || status == "letter" || status == ""){
+                if( status == "comment"){
+                    temp.append(c);
+                } else if(status == "digit" || status == "") {
                     temp.append(c);
                     status = "digit";
                     if(this.stringToParse.charAt(i+1) == ' '){
                         String newNum = temp.toString();
-                        tokenize("ID", newNum);
+                        tokenize("NUM", newNum);
+                        temp = new StringBuilder();
+                        status = "";
+                        i++;
+                    }
+                } else if (status == "letter"){
+                    temp.append(c);
+                    if(this.stringToParse.charAt(i+1) == ' '){
+                        String newWord = temp.toString();
+                        tokenize("ID", newWord);
                         temp = new StringBuilder();
                         status = "";
                         i++;
@@ -157,7 +170,22 @@ public class Lexer {
 
             //slash
             if(c == '/'){
-                tokenize("SLASH", "/");
+                if(this.stringToParse.charAt(i+1) == ' '){
+                    tokenize("SLASH", "/");
+                } else if (this.stringToParse.charAt(i+1) == '/'){
+                    status = "comment";
+                }
+            }
+
+            //newLine
+
+            if( c == '\n'){
+                if(status == "comment"){
+                    String newComment = temp.toString();
+                    tokenize("COMMENT", newComment);
+                } else {
+                    tokenize("NEWLINE", " \n");
+                }
             }
 
             //PCT
