@@ -95,6 +95,7 @@ public class Lexer {
                             tokenize("ID", newWord);
                         };
                         temp = new StringBuilder();
+                        status = "";
                         i++;
                     }
                 } else {
@@ -104,13 +105,14 @@ public class Lexer {
 
             //digits
             if(Character.isDigit(c)){
-                if(status == "digit" || status == ""){
+                if(status == "digit" || status == "letter" || status == ""){
                     temp.append(c);
                     status = "digit";
                     if(this.stringToParse.charAt(i+1) == ' '){
                         String newNum = temp.toString();
                         tokenize("ID", newNum);
                         temp = new StringBuilder();
+                        status = "";
                         i++;
                     }
                 }else {
@@ -190,6 +192,7 @@ public class Lexer {
                     tokenize("LT", "<");
                 } else if (this.stringToParse.charAt(i+1) == '='){
                     tokenize("LE", "<=");
+                    i++;
                 }
             }
 
@@ -199,12 +202,9 @@ public class Lexer {
                     tokenize("GT", ">");
                 } else if (this.stringToParse.charAt(i+1) == '='){
                     tokenize("GE", ">=");
+                    i++;
                 }
             }
-
-
-
-
 
         }
 
