@@ -83,14 +83,14 @@ public class Lexer {
                     }
                 }
             } else {
-                tokens.add(new Token(backtrackState, input.substring(tokenStart, backtrackI + 1)));
+                tokens.add(new Token(backtrackState.toString(), input.substring(tokenStart, backtrackI + 1)));
                 dfa.currentState = State.start;
                 i = backtrackI;
                 tokenStart = backtrackI + 1;
             }
         }
         if (dfa.currentStateAccepting()) {
-            tokens.add(new Token(dfa.currentState, input.substring(tokenStart, backtrackI + 1)));
+            tokens.add(new Token(dfa.currentState.toString(), input.substring(tokenStart, backtrackI + 1)));
         } else {
             System.out.println("Could not tokenize whole input");
             System.exit(1);
@@ -99,10 +99,10 @@ public class Lexer {
     }
     private static void sanitize(ArrayList<Token> tokens) {
         for (Token token: tokens) {
-            if (token.kind == State.zero) {
-                token.kind = State.NUM;
+            if (token.kind == State.zero.toString()) {
+                token.kind = State.NUM.toString();
             } else if (DFA.alsoID.contains(token.kind)) {
-                token.kind = State.ID;
+                token.kind = State.ID.toString();
             }
         }
         for (int i = 0; i < tokens.size() - 1; i++) {
